@@ -1,0 +1,294 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ========================= AUTH MODEL ===========================
+enum UserStatus {
+  ACTIVE
+  DISABLED
+  SUSPENDED
+  BANNED
+  PENDING
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  username      String?        @unique
+  password      String
+  status        UserStatus     @default(ACTIVE)
+  customers     Customer[]
+  profile       Profile?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+  memberShips   MemberShip[]
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]
+}
+
+model Profile {
+  id        String  @id @default(uuid())
+  userId    String  @unique
+  firstName String
+  lastName  String
+  phone     String?
+  user      User    @relation(fields: [userId], references: [id])
+}
+
+enum MemberShipRole {
+  OWNER
+  ADMIN
+  STAFF
+  CUSTOMER
+}
+
+model MemberShip {
+  id String @id @default(cuid())
+
+  userId         String
+  organizationId String
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  role      MemberShipRole @default(CUSTOMER)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@unique([userId, organizationId])
+  @@index([organizationId, role])
+  @@index([userId])
+}
+
+// 4
+model RefreshToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revokedAt DateTime?
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ========================= ORGANIZATION MODEL ===========================
+
+model Organization {
+  id        String       @id @default(cuid())
+  name      String
+  slug      String       @unique
+  timezone  String       @default("Europe/Istanbul")
+  isActive  Boolean      @default(true)
+  members   MemberShip[]
+  audits    AuditLog[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([slug])
+}
+
+// ========================= STORE MODEL ===========================
+model Category {
+  id       String  @id @default(uuid())
+  name     String
+  parentId String?
+
+  parent   Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryToCategory")
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  price       Decimal
+  sku         String  @unique
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  variants  ProductVariant[]
+  inventory Inventory?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductVariant {
+  id        String @id @default(uuid())
+  productId String
+  name      String
+  value     String
+
+  product Product @relation(fields: [productId], references: [id])
+}
+
+// ========================= INVENTORY MODEL ===========================
+model Inventory {
+  id        String @id @default(uuid())
+  productId String @unique
+  stock     Int
+  reserved  Int    @default(0)
+
+  product Product @relation(fields: [productId], references: [id])
+
+  updatedAt DateTime @updatedAt
+}
+
+// ========================= CUSTOMER MODEL ===========================
+model Customer {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  // business fields
+  totalSpent     Decimal   @default(0)
+  orderCount     Int       @default(0)
+  lastOrderAt    DateTime?
+  organizationId String
+
+  orders Order[]
+
+  createdAt DateTime @default(now())
+}
+
+// ========================= ORDER MODEL ===========================
+model Order {
+  id String @id @default(uuid())
+
+  customerId     String
+  customer       Customer @relation(fields: [customerId], references: [id])
+  organizationId String
+
+  status OrderStatus @default(PENDING)
+  total  Decimal
+
+  items   OrderItem[]
+  payment Payment?
+
+  createdAt DateTime @default(now())
+}
+
+model OrderItem {
+  id      String @id @default(uuid())
+  orderId String
+
+  productId      String
+  quantity       Int
+  organizationId String
+
+  price Decimal
+  name  String
+  sku   String
+
+  order Order @relation(fields: [orderId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+// ========================= TRANSACTION MODEL ===========================
+
+model Transaction {
+  id        String   @id @default(cuid())
+
+  type      TransactionType
+  amount    Decimal
+  status    TransactionStatus
+
+  orderId   String?
+
+  createdAt DateTime @default(now())
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  REFUND
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+// ========================= PAYMENT MODEL ===========================
+model Payment {
+  id      String        @id @default(uuid())
+  orderId String        @unique
+  amount  Decimal
+  status  PaymentStatus
+  method  PaymentMethod
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum PaymentMethod {
+  CARD
+  CASH
+  TRANSFER
+}
+
+// ========================= AUDIT MODEL ===========================
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  REGISTER
+}
+
+model AuditLog {
+  id             String        @id @default(cuid())
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  userId         String?
+  user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action         AuditAction
+  entity         String?
+  entityId       String?
+  ip             String?
+  userAgent      String?
+  meta           Json?
+  createdAt      DateTime      @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+}

@@ -1,0 +1,43 @@
+nest g module modules/auth
+nest g controller modules/auth
+nest g service modules/auth
+
+nest g module modules/organizations
+nest g controller modules/organizations
+nest g service modules/organizations
+
+nest g module modules/memberships
+nest g controller modules/memberships
+nest g service modules/memberships
+
+nest g module modules/products
+nest g controller modules/products
+nest g service modules/products
+
+nest g module modules/category
+nest g controller modules/category
+nest g service modules/category
+
+nest g module modules/customer
+nest g controller modules/customer
+nest g service modules/customer
+
+nest g module modules/bookings --no-spec
+nest g controller modules/bookings --no-spec
+nest g service modules/bookings --no-spec
+
+nest g module modules/health --no-spec
+nest g controller modules/health --no-spec
+nest g service modules/health --no-spec
+
+nest g module modules/audit --no-spec
+nest g controller modules/audit --no-spec
+nest g service modules/audit --no-spec
+
+nest g module modules/availability --no-spec
+nest g controller modules/availability --no-spec
+nest g service modules/availability --no-spec
+
+
+$mods = "auth", "organizations", "health", "memberships", "services", "availability", "bookings", "audit"
+$mods | ForEach-Object { New-Item -ItemType Directory -Force -Path "src/modules/$_/dto" | Out-Null }

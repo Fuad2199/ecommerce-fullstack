@@ -1,0 +1,5 @@
+services:
+  ecommerce-backend:
+    build: ./apps/ecommerce-backend
+    ports:
+      - "4000:4000"
