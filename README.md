@@ -1,159 +1,78 @@
-# Turborepo starter
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=nextjs,react,tailwind,nestjs,postgres,prisma" />
+</p>
 
-This Turborepo starter is maintained by the Turborepo core team.
+# 🛒 Full Stack E-Commerce
 
-## Using this example
+## 📌 Project Overview
+A full-stack E-Commerce application built to simulate a real-world online shopping platform, where users can register, authenticate, browse products, add items to cart, and place orders.
 
-Run the following command:
+This project is being developed as a practical backend and frontend journey focused on scalable architecture, clean code practices, and production-oriented development.
 
-```sh
-npx create-turbo@latest
-```
+---
 
-## What's inside?
+## 🔑 Current Features
+- 🔐 User Authentication (Sign up / Login with JWT)
+- 👤 Protected user routes
+- 🛒 Add products to cart
+- 📦 Place orders
 
-This Turborepo includes the following packages/apps:
+---
 
-### Apps and Packages
+## 🛠️ Tech Stack
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### Frontend
+- Next.js
+- React
+- Tailwind CSS
+- Shadcn/UI
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Backend
+- NestJS
+- Prisma ORM
+- PostgreSQL
+- NeonDB
 
-### Utilities
+### Authentication & Security
+- JWT (Access Token)
+- Passport JWT
+- bcrypt
+- Guards
+- DTO Validation
+- Zod
 
-This Turborepo has some additional tools already setup for you:
+---
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## 🎯 Learning Goals
+This project is focused on improving:
+- Dependency Injection
+- Design Patterns
+- Scalable Module Architecture
+- Authentication & Authorization
+- Database Design
+- Production-level Backend Thinking
 
-### Build
+---
 
-To build all apps and packages, run the following command:
+## 🚧 Project Status
+Currently in active development.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+### Completed:
+- Auth Module (initial version)
 
-```sh
-cd my-turborepo
-turbo build
-```
+### In Progress:
+- Products Module
 
-Without global `turbo`, use your package manager:
+### Planned:
+- Categories
+- Cart
+- Orders
+- Payment Integration
+- Admin Dashboard
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
-```
+---
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+## 🚀 Objective
+To build an MVP-level scalable full-stack E-Commerce system while strengthening real-world full stack development skills.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo build --filter=docs
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+---

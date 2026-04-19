@@ -1,4 +1,4 @@
-import { MemberShipRole } from '../../generated/prisma/enums';
+import type { MemberShipRole } from '../../generated/prisma/enums';
 
 export interface AuthRequest extends Request {
   user?: {

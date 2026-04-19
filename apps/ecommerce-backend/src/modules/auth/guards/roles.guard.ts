@@ -35,7 +35,7 @@ export class RolesGuard implements CanActivate {
     const userId = req.user?.userId || null;
     if (!userId) throw new UnauthorizedException('Unauthorized');
 
-    const orgId = (req.headers['x-org-id'] as string | undefined) ?? null;
+    const orgId = (req.headers.get('x-org-id') as string | undefined) ?? null;
     if (!orgId) throw new UnauthorizedException('Missing OrgId');
     const membership: MembershipSelect | null =
       (await this.prisma.memberShip.findUnique({

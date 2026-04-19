@@ -4,7 +4,6 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { PrismaService } from '../../prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { RefreshPayload, TokenResponse } from './auth.types';
 import {
@@ -14,6 +13,7 @@ import {
   RegisterInputDto,
 } from './dto/auth.schema';
 import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../../prisma.service';
 
 @Injectable()
 export class AuthService {
