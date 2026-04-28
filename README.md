@@ -59,9 +59,10 @@ Currently in active development.
 
 ### Completed:
 - Auth Module (initial version)
+- Products Module
 
 ### In Progress:
-- Products Module
+- Users Module
 
 ### Planned:
 - Categories

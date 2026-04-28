@@ -4,8 +4,8 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -114,32 +114,66 @@ model Category {
   products Product[]
 
   createdAt DateTime @default(now())
+
+  @@index([parentId])
+}
+
+model ProductImage {
+  id    String  @id @default(uuid())
+  url   String
+  alt   String?
+  order Int     @default(0)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Product {
   id          String  @id @default(uuid())
   name        String
   description String?
-  price       Decimal
-  sku         String  @unique
 
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
+  images ProductImage[]
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   variants  ProductVariant[]
   inventory Inventory?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([createdAt])
 }
 
 model ProductVariant {
   id        String @id @default(uuid())
   productId String
-  name      String
-  value     String
 
-  product Product @relation(fields: [productId], references: [id])
+  sku   String  @unique
+  price Decimal
+  stock Int
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  attributes VariantAttribute[]
+
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+  @@index([sku])
+}
+
+model VariantAttribute {
+  id        String @id @default(uuid())
+  variantId String
+
+  name  String
+  value String
+
+  variant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 }
 
 // ========================= INVENTORY MODEL ===========================
@@ -149,7 +183,7 @@ model Inventory {
   stock     Int
   reserved  Int    @default(0)
 
-  product Product @relation(fields: [productId], references: [id])
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   updatedAt DateTime @updatedAt
 }
@@ -216,13 +250,13 @@ enum OrderStatus {
 // ========================= TRANSACTION MODEL ===========================
 
 model Transaction {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  type      TransactionType
-  amount    Decimal
-  status    TransactionStatus
+  type   TransactionType
+  amount Decimal
+  status TransactionStatus
 
-  orderId   String?
+  orderId String?
 
   createdAt DateTime @default(now())
 }

@@ -1,1 +1,7 @@
 cd apps/ecommerce-backend
+pnpm run start:dev
+pnpm run build
+pnpm migrate dev
+pnpm db push
+pnpm prisma generate
+pnpm dlx prisma studio

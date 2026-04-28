@@ -14,17 +14,21 @@ nest g module modules/products
 nest g controller modules/products
 nest g service modules/products
 
-nest g module modules/category
-nest g controller modules/category
-nest g service modules/category
+nest g module modules/users
+nest g controller modules/users
+nest g service modules/users
+
+nest g module modules/cart
+nest g controller modules/cart
+nest g service modules/cart
+
+nest g module modules/categories
+nest g controller modules/categories
+nest g service modules/categories
 
 nest g module modules/customer
 nest g controller modules/customer
 nest g service modules/customer
-
-nest g module modules/bookings --no-spec
-nest g controller modules/bookings --no-spec
-nest g service modules/bookings --no-spec
 
 nest g module modules/health --no-spec
 nest g controller modules/health --no-spec
