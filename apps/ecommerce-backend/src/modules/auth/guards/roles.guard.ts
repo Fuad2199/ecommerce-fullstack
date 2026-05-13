@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   ForbiddenException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -17,6 +18,7 @@ type MembershipSelect = Prisma.MemberShipGetPayload<{
 
 @Injectable()
 export class RolesGuard implements CanActivate {
+  private readonly logger = new Logger(RolesGuard.name);
   constructor(
     private readonly reflector: Reflector,
     private readonly prisma: PrismaService,
@@ -35,8 +37,15 @@ export class RolesGuard implements CanActivate {
     const userId = req.user?.userId || null;
     if (!userId) throw new UnauthorizedException('Unauthorized');
 
-    const orgId = (req.headers.get('x-org-id') as string | undefined) ?? null;
-    if (!orgId) throw new UnauthorizedException('Missing OrgId');
+    const orgId =
+      typeof req.headers['x-org-id'] === 'string'
+        ? req.headers['x-org-id']
+        : undefined;
+    this.logger.log(`OrgId: ${orgId}`);
+    if (!orgId) {
+      this.logger.warn('Missing organization header x-org-id');
+      throw new UnauthorizedException('Missing OrgId');
+    }
     const membership: MembershipSelect | null =
       (await this.prisma.memberShip.findUnique({
         where: {
