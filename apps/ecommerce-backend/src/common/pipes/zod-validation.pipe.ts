@@ -7,23 +7,23 @@ import {
 import { ZodType } from 'zod';
 
 @Injectable()
-export class ZodValidationPipe<T> implements PipeTransform {
-  constructor(private readonly schema: ZodType<T>) {}
+export class ZodValidationPipe<T extends ZodType> implements PipeTransform {
+  constructor(private readonly schema: T) {}
 
-  transform(value: unknown, metadata: ArgumentMetadata): T {
-    const parsed = this.schema.safeParse(value);
+  transform(value: unknown, metadata: ArgumentMetadata) {
+    const result = this.schema.safeParse(value);
 
-    if (parsed.success) return parsed.data;
+    if (!result.success) {
+      const formatted = result.error.issues.map((err) => ({
+        path: err.path.join('.'),
+        message: err.message,
+      }));
 
-    // map error messages
-    // const errors = parsed.error.issues.map((i) => ({
-    //   path: i.path.join('.') || '(root)',
-    //   message: i.message,
-    // }));
-
-    throw new BadRequestException({
-      message: `Validation failed for ${metadata.type}`,
-      errors: parsed.error.issues,
-    });
+      throw new BadRequestException({
+        message: `Validation failed for ${metadata.type}`,
+        errors: formatted,
+      });
+    }
+    return result.data;
   }
 }
