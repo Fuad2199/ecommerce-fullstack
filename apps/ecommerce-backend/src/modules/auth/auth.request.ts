@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import type { MemberShipRole } from '../../generated/prisma/enums';
 
 export interface AuthRequest extends Request {
