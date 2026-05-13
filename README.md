@@ -60,12 +60,12 @@ Currently in active development.
 ### Completed:
 - Auth Module (initial version)
 - Products Module
-
-### In Progress:
 - Users Module
 
-### Planned:
+### In Progress:
 - Categories
+
+### Planned:
 - Cart
 - Orders
 - Payment Integration

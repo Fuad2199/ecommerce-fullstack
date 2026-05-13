@@ -30,12 +30,13 @@ model User {
   status        UserStatus     @default(ACTIVE)
   customers     Customer[]
   profile       Profile?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  deletedAt     DateTime?
   memberShips   MemberShip[]
   refreshTokens RefreshToken[]
   auditLogs     AuditLog[]
+  
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
 }
 
 model Profile {
@@ -51,7 +52,7 @@ enum MemberShipRole {
   OWNER
   ADMIN
   STAFF
-  CUSTOMER
+  USER
 }
 
 model MemberShip {
@@ -63,7 +64,7 @@ model MemberShip {
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   organization Organization @relation(fields: [organizationId], references: [id])
 
-  role      MemberShipRole @default(CUSTOMER)
+  role      MemberShipRole @default(USER)
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
 
