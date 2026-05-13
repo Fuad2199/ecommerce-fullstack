@@ -32,7 +32,11 @@ export class AuthController {
   @Public()
   @Get('public-ping')
   publicPing() {
-    return { ok: true };
+    return {
+      success: true,
+      message: 'Auth module reachable',
+      timestamp: new Date().toISOString(),
+    };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -62,6 +66,7 @@ export class AuthController {
     return this.auth.refresh(dto);
   }
 
+  @Public()
   @Post('logout')
   @UsePipes(new ZodValidationPipe(LogoutSchema))
   logout(@Body() dto: LogoutInputDto) {
