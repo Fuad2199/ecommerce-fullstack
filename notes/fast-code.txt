@@ -1,5 +1,7 @@
 cd apps/ecommerce-backend
+cd apps/ecommerce-frontend
 pnpm run start:dev
+pnpm run dev
 pnpm run build
 pnpm migrate dev
 pnpm db push
